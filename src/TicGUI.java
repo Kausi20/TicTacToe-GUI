@@ -6,7 +6,7 @@ import java.awt.*;
 /**
  * @author: Kaushican Uthayakumaran
  * @version: 1.0
- * @date: 09.06.2020
+ * @date: 13.11.2020
  */
 
 public class TicGUI extends JFrame {
