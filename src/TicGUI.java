@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 
@@ -17,10 +18,31 @@ public class TicGUI extends JFrame {
     JPanel pnlMain = new JPanel();
     int count = 0;
 
+    int scoreX = 0;
+    int scoreO = 0;
+    JLabel lblX = new JLabel();
+    JLabel lblO = new JLabel();
+    JLabel lblCurrentPlayer = new JLabel();
+    JPanel pnlScore = new JPanel();
+
     public TicGUI() {
         setTitle("TicTacToe");
         setSize(500, 500);
         setLocationRelativeTo(null);
+        grid();
+        lblX.setText("Punkte X:     "+scoreX);
+        lblO.setText("Punkte O:     "+scoreO);
+        setVisible(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+    public TicGUI(int punkteX, int punkte0) {
+        scoreO = punkte0;
+        scoreX = punkteX;
+        setTitle("TicTacToe");
+        setSize(500, 500);
+        setLocationRelativeTo(null);
+        lblX.setText("Punkte X:     "+scoreX);
+        lblO.setText("Punkte O:     "+scoreO);
         grid();
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -38,12 +60,25 @@ public class TicGUI extends JFrame {
 
             pnlButtons.add(buttons[i]);
         }
+
         setActionListeners();
 
+
+        lblCurrentPlayer.setText("Spieler: "+spieler);
+
+        pnlScore.setLayout(new GridLayout(0,3));
+        lblX.setHorizontalAlignment(JLabel.LEFT);
+        lblCurrentPlayer.setHorizontalAlignment(JLabel.CENTER);
+        lblO.setHorizontalAlignment(JLabel.RIGHT);
+        pnlScore.add(lblX);
+        pnlScore.add(lblCurrentPlayer);
+        pnlScore.add(lblO);
+        pnlScore.setBorder(new EmptyBorder(20,5,20,20));
 
         pnlMain.setLayout(new BorderLayout(20, 20));
         pnlMain.add(pnlButtons, BorderLayout.CENTER);
 
+        getContentPane().add(pnlScore,BorderLayout.NORTH);
         getContentPane().add(pnlMain, BorderLayout.CENTER);
     }
 
@@ -52,8 +87,8 @@ public class TicGUI extends JFrame {
             button.setText(spieler);
             count++;
             if (count == 9){
-                JOptionPane.showMessageDialog(null, "Unentschieden", "NO WINNER", JOptionPane.OK_OPTION);
-                new TicGUI();
+                JOptionPane.showMessageDialog(null, "Unentschieden", "Kein Gewinner", JOptionPane.OK_OPTION);
+                new TicGUI(scoreX,scoreO);
                 this.dispose();
             }
             checkWinner();
@@ -71,14 +106,15 @@ public class TicGUI extends JFrame {
         buttons[6].addActionListener(actionEvent -> setButtonText(buttons[6]));
         buttons[7].addActionListener(actionEvent -> setButtonText(buttons[7]));
         buttons[8].addActionListener(actionEvent -> setButtonText(buttons[8]));
-
     }
 
     public void playerChange() {
         if (spieler == "X") {
             spieler = "O";
+            lblCurrentPlayer.setText("Spieler: "+spieler);
         } else if (spieler == "O") {
             spieler = "X";
+            lblCurrentPlayer.setText("Spieler: "+spieler);
         }
     }
 
@@ -97,15 +133,20 @@ public class TicGUI extends JFrame {
             winnerStatus();
         else if (buttons[2].getText().equals(spieler)&&buttons[2].getText().equals(buttons[5].getText()) && buttons[2].getText().equals(buttons[8].getText()))
             winnerStatus();
+        else if (buttons[2].getText().equals(spieler)&&buttons[2].getText().equals(buttons[4].getText()) && buttons[2].getText().equals(buttons[6].getText()))
+            winnerStatus();
     }
-
 
     public void winnerStatus() {
         JOptionPane.showMessageDialog(null, "Spieler " + spieler + " hat gewonnen", "Gewinner", JOptionPane.OK_OPTION);
-        new TicGUI();
+        if(spieler.equals("X")){
+            scoreX++;
+        }else if(spieler.equals("O")){
+            scoreO++;
+        }
+        new TicGUI(scoreX,scoreO);
         this.dispose();
     }
-
 
     public static void main(String[] args) {
         TicGUI ticGUI = new TicGUI();
